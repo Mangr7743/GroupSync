@@ -13,11 +13,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.groupsync.R
 import com.example.groupsync.databinding.FragmentGalleryBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -31,7 +28,7 @@ class GalleryFragment : Fragment() {
 
     private lateinit var mButtonChooseImage: Button
     private lateinit var mButtonUpload: Button
-    private lateinit var mTextViewShowUploads: TextView
+    //private lateinit var mTextViewShowUploads: TextView
     private lateinit var mEditTextFileName: EditText
     private lateinit var mImageView: ImageView
     private lateinit var mProgressBar: ProgressBar
@@ -61,7 +58,6 @@ class GalleryFragment : Fragment() {
 
     mButtonChooseImage = binding.buttonChooseImage
     mButtonUpload = binding.buttonUpload
-    mTextViewShowUploads = binding.textViewShowUploads
     mEditTextFileName = binding.editTextFileName
     mImageView = binding.imageView
     mProgressBar = binding.progressBar
