@@ -4,18 +4,27 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.groupsync.R
 import com.example.groupsync.databinding.FragmentGalleryBinding
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
+import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 
 class GalleryFragment : Fragment() {
@@ -28,6 +37,11 @@ class GalleryFragment : Fragment() {
     private lateinit var mProgressBar: ProgressBar
 
     private var mImageUri: Uri? = null
+
+    private lateinit var mStorageRef: StorageReference
+    private lateinit var mDatabaseRef: DatabaseReference
+
+    private var mUploadTask: StorageTask<UploadTask.TaskSnapshot>? = null
 
 
     private var _binding: FragmentGalleryBinding? = null
@@ -52,8 +66,19 @@ class GalleryFragment : Fragment() {
     mImageView = binding.imageView
     mProgressBar = binding.progressBar
 
+    mStorageRef = FirebaseStorage.getInstance().getReference("uploads")
+    mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads")
+
     mButtonChooseImage.setOnClickListener {
         openFileChooser()
+    }
+
+    mButtonUpload.setOnClickListener {
+        if (mUploadTask != null && mUploadTask!!.isInProgress) {
+            Toast.makeText(context, "Upload in progress", Toast.LENGTH_SHORT).show()
+        } else {
+            uploadFile()
+        }
     }
 
     return root
@@ -65,6 +90,42 @@ class GalleryFragment : Fragment() {
             action = Intent.ACTION_GET_CONTENT
         }
         startActivityForResult(intent, 1)
+    }
+
+    private fun getFileExtension(uri: Uri): String? {
+        val cresolver = requireActivity().contentResolver
+        val mime = MimeTypeMap.getSingleton()
+        return mime.getExtensionFromMimeType(cresolver.getType(uri))
+    }
+    private fun uploadFile() {
+        mImageUri?.let { uri ->
+            val fileReference: StorageReference = mStorageRef.child(System.currentTimeMillis().toString() + "." + getFileExtension(uri))
+
+            mUploadTask = fileReference.putFile(uri)
+                .addOnSuccessListener { taskSnapshot ->
+                val handler = Handler()
+                handler.postDelayed({
+                    mProgressBar.progress = 0
+                }, 500)
+                Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
+
+                val upload = Upload(
+                    mEditTextFileName.text.toString().trim(),
+                    taskSnapshot.uploadSessionUri.toString()
+                )
+                val uploadId = mDatabaseRef.push().key
+                mDatabaseRef.child(uploadId!!).setValue(upload)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            }
+            .addOnProgressListener { taskSnapshot ->
+                val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+                mProgressBar.progress = progress.toInt()
+            }
+        } ?: run {
+            Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
