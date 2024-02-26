@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "650388052448",
+    "project_id": "groupsync-84b33",
+    "storage_bucket": "groupsync-84b33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650388052448:android:7ad34a60fc2876ec093385",
+        "android_client_info": {
+          "package_name": "com.example.groupsync"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPB5mo05Qo67O_HvvGbXc7UMiFJChKAig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
