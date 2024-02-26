@@ -5,3 +5,4 @@ Date | Ravinder | Zuhayr | Matthews | Rohan | Jathurshan | Japmeet | Task |
 2024-02-08 | 2 | 0 | 0 | 0 | 0 | 0 | Deliverable 2 |
 2024-02-20 | 1 | 0 | 0 | 0 | 0 | 0 | Android Studio Prep |
 2024-02-21 | 1 | 0 | 0 | 0 | 0 | 0 | Coding Initial Setup |
+2024-02-26 | 6 | 0 | 0 | 0 | 0 | 0 | Working on feature - download and upload image sharing |
