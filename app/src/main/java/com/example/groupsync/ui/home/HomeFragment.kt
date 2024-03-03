@@ -1,13 +1,17 @@
 package com.example.groupsync.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.groupsync.databinding.FragmentHomeBinding
+
 
 class HomeFragment : Fragment() {
 
@@ -31,6 +35,19 @@ private var _binding: FragmentHomeBinding? = null
     homeViewModel.text.observe(viewLifecycleOwner) {
       textView.text = it
     }
+
+      // Observe LiveData from ViewModel
+      val recyclerView: RecyclerView = binding.recyclerView
+      homeViewModel.cards.observe(viewLifecycleOwner) { newList ->
+          // Update UI with the new list of strings
+          Log.i("title", newList[0].title)
+          val adapter = EventsAdapter(requireContext(), newList)
+          val manager = LinearLayoutManager(requireContext())
+          recyclerView.setLayoutManager(manager)
+          recyclerView.setHasFixedSize(true)
+          recyclerView.adapter = adapter
+      }
+
     return root
   }
 
