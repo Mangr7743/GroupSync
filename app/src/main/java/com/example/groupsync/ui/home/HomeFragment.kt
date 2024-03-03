@@ -38,14 +38,17 @@ private var _binding: FragmentHomeBinding? = null
 
       // Observe LiveData from ViewModel
       val recyclerView: RecyclerView = binding.recyclerView
-      homeViewModel.cards.observe(viewLifecycleOwner) { newList ->
-          // Update UI with the new list of strings
+      homeViewModel.events.observe(viewLifecycleOwner) { newList ->
+          // Update UI with the new list of events
           Log.i("title", newList[0].title)
-          val adapter = EventsAdapter(requireContext(), newList)
+          val adapter = EventsAdapter(requireContext(), newList, homeViewModel)
           val manager = LinearLayoutManager(requireContext())
           recyclerView.setLayoutManager(manager)
           recyclerView.setHasFixedSize(true)
           recyclerView.adapter = adapter
+
+          // Show empty text if no events
+          textView.visibility = if (newList.isEmpty()) View.VISIBLE else View.INVISIBLE
       }
 
     return root
