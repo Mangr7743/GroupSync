@@ -13,12 +13,14 @@ import android.webkit.MimeTypeMap
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.groupsync.R
 import com.example.groupsync.databinding.FragmentNeweventBinding
 import com.example.groupsync.ui.gallery.Upload
+import com.example.groupsync.ui.home.HomeViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.database.DatabaseReference
@@ -31,7 +33,7 @@ import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 
-class NewEventFragment: Fragment() {
+class NewEventFragment : Fragment() {
     private var _binding: FragmentNeweventBinding? = null
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -97,13 +99,15 @@ class NewEventFragment: Fragment() {
     }
 
     public fun createEvent() {
-        if (mTitleField.text.toString() == ""|| mDescField.text.toString() == "") {
+        if (mTitleField.text.toString() == "" || mDescField.text.toString() == "") {
             Toast.makeText(context, "Ensure all fields are filled", Toast.LENGTH_SHORT).show()
             return
         }
 
         mImageUri?.let { uri ->
-            val fileReference: StorageReference = mStorageRef.child(System.currentTimeMillis().toString() + "." + getFileExtension(uri))
+            val fileReference: StorageReference = mStorageRef.child(
+                System.currentTimeMillis().toString() + "." + getFileExtension(uri)
+            )
 
             mUploadTask = fileReference.putFile(uri)
                 .addOnSuccessListener { taskSnapshot ->
@@ -136,7 +140,12 @@ class NewEventFragment: Fragment() {
                             "imageUrl" to downloadUri.toString()
                         )
                     )
+//                        .addOnSuccessListener {
+//                            ViewModelProvider(this).get(HomeViewModel::class.java)
+//                                .fetchDataFromFirestore();
+//                        }
                     findNavController().navigateUp()
+
                 }
             }
         } ?: run {

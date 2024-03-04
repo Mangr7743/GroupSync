@@ -39,7 +39,7 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    private fun fetchDataFromFirestore() {
+    public fun fetchDataFromFirestore() {
         db.collection("events")
             .get()
             .addOnSuccessListener { result ->
@@ -53,7 +53,7 @@ class HomeViewModel : ViewModel() {
                         )
                     )
                 }
-                _events.value = eventsList;
+                _events.postValue(eventsList);
             }
             .addOnFailureListener { exception ->
                 Log.d("HELP", "Error getting documents: ", exception)
