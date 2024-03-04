@@ -1,6 +1,8 @@
 package com.example.groupsync
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -10,7 +12,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.groupsync.databinding.ActivityMainBinding
+import com.example.groupsync.ui.newevent.NewEventFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,10 +29,6 @@ private lateinit var binding: ActivityMainBinding
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -38,6 +38,18 @@ private lateinit var binding: ActivityMainBinding
             R.id.nav_home, R.id.nav_gallery, R.id.nav_images), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        binding.appBarMain.fab.setOnClickListener {
+            navController.navigate(R.id.nav_newevent)
+        }
+
+        navController.addOnDestinationChangedListener { controller, destination, args ->
+            if (destination.label.toString() == "New Event") {
+                binding.appBarMain.fab.hide()
+            } else {
+                binding.appBarMain.fab.show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

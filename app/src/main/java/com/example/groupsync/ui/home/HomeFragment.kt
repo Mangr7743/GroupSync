@@ -40,7 +40,6 @@ private var _binding: FragmentHomeBinding? = null
       val recyclerView: RecyclerView = binding.recyclerView
       homeViewModel.events.observe(viewLifecycleOwner) { newList ->
           // Update UI with the new list of events
-          Log.i("title", newList[0].title)
           val adapter = EventsAdapter(requireContext(), newList, homeViewModel)
           val manager = LinearLayoutManager(requireContext())
           recyclerView.setLayoutManager(manager)
