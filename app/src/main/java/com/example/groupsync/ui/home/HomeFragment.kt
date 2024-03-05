@@ -1,6 +1,7 @@
 package com.example.groupsync.ui.home
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -40,8 +41,6 @@ class HomeFragment : Fragment() {
         // Observe LiveData from ViewModel
         val recyclerView: RecyclerView = binding.recyclerView
         homeViewModel.events.observe(viewLifecycleOwner) { newList ->
-            Log.e("Amonifujue", "I AM BEING CALLED!!!!!")
-            Log.e("data", newList.size.toString())
             // Update UI with the new list of events
             val adapter = EventsAdapter(requireContext(), newList, homeViewModel)
             val manager = LinearLayoutManager(requireContext())

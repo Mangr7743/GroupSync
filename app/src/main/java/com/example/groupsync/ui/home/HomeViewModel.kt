@@ -2,6 +2,7 @@ package com.example.groupsync.ui.home
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,18 +16,7 @@ class HomeViewModel : ViewModel() {
         value = "Tap the + button to create an event"
     }
     private val _events = MutableLiveData<List<EventMetadata>>().apply {
-        value = listOf(
-            EventMetadata(
-                "title1",
-                "subtitle1",
-                "https://png.pngtree.com/png-vector/20220724/ourmid/pngtree-people-looking-nature-mountain-tourist-png-image_6063213.png"
-            ),
-            EventMetadata(
-                "title2",
-                "subtitle2",
-                "https://png.pngtree.com/png-vector/20220724/ourmid/pngtree-people-looking-nature-mountain-tourist-png-image_6063213.png"
-            )
-        )
+        value = listOf()
     }
     val text: LiveData<String> = _text
     val events: LiveData<List<EventMetadata>> = _events;
@@ -47,6 +37,7 @@ class HomeViewModel : ViewModel() {
                 for (document in result) {
                     eventsList.add(
                         EventMetadata(
+                            document.id.toString(),
                             document.data["title"].toString(),
                             document.data["description"].toString(),
                             document.data["imageUrl"].toString(),
