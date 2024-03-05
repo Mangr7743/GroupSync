@@ -2,36 +2,38 @@ package com.example.groupsync.ui.gallery
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.groupsync.R
+import com.example.groupsync.databinding.ImageItemBinding
 import com.squareup.picasso.Picasso
 
-class ImageAdapter(private val mContext: Context, private val mUploads: List<Upload>): RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
+class ImageAdapter(private val context: Context, private val uploads: List<Upload>)
+    : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val v: View = LayoutInflater.from(mContext).inflate(R.layout.image_item, parent, false)
-        return ImageViewHolder(v)
+        val binding = ImageItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ImageViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val uploadCurrent: Upload = mUploads[position]
-        holder.textViewName.text = uploadCurrent.name
-        Picasso.get()
-            .load(uploadCurrent.imageUrl)
-            .fit()
-            .centerCrop()
-            .into(holder.imageView)
+        val upload = uploads[position]
+        with(holder.binding) {
+            textViewName.text = upload.name
+            if (upload.imageUrl.isNotEmpty()) {
+                Picasso.get()
+                    .load(upload.imageUrl)
+                    .fit()
+                    .centerCrop()
+                    .into(holder.binding.imageViewUpload)
+            } else {
+                // Handle the case where imageUrl is null or empty, e.g., set a default image
+            }
+
+        }
     }
 
-    override fun getItemCount(): Int {
-        return mUploads.size
-    }
+    override fun getItemCount() = uploads.size
 
-    inner class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var textViewName: TextView = itemView.findViewById(R.id.text_view_name)
-        var imageView: ImageView = itemView.findViewById(R.id.image_view_upload)
-    }
+
+    class ImageViewHolder(val binding: ImageItemBinding) : RecyclerView.ViewHolder(binding.root)
 }

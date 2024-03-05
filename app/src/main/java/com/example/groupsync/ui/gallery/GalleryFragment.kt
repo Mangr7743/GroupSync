@@ -73,7 +73,9 @@ class GalleryFragment : Fragment() {
         if (mUploadTask != null && mUploadTask!!.isInProgress) {
             Toast.makeText(context, "Upload in progress", Toast.LENGTH_SHORT).show()
         } else {
-            uploadFile()
+            if (isAdded){
+                uploadFile()
+            }
         }
     }
 
@@ -95,34 +97,38 @@ class GalleryFragment : Fragment() {
     }
     private fun uploadFile() {
         mImageUri?.let { uri ->
-            val fileReference: StorageReference = mStorageRef.child(System.currentTimeMillis().toString() + "." + getFileExtension(uri))
+            val fileExtension = getFileExtension(uri)
+            val fileReference: StorageReference = mStorageRef.child("${System.currentTimeMillis()}.$fileExtension")
 
             mUploadTask = fileReference.putFile(uri)
                 .addOnSuccessListener { taskSnapshot ->
-                val handler = Handler()
-                handler.postDelayed({
-                    mProgressBar.progress = 0
-                }, 500)
-                Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
+                    // Reset progress bar after a delay to show completion
+                    Handler().postDelayed({ mProgressBar.progress = 0 }, 500)
 
-                val upload = Upload(
-                    mEditTextFileName.text.toString().trim(),
-                    taskSnapshot.uploadSessionUri.toString()
-                )
-                val uploadId = mDatabaseRef.push().key
-                mDatabaseRef.child(uploadId!!).setValue(upload)
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-            }
-            .addOnProgressListener { taskSnapshot ->
-                val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
-                mProgressBar.progress = progress.toInt()
-            }
+                    // Get the download URL from the task result
+                    taskSnapshot.storage.downloadUrl.addOnSuccessListener { downloadUri ->
+                        val upload = Upload(
+                            mEditTextFileName.text.toString().trim(),
+                            downloadUri.toString() // Use the download URI here
+                        )
+                        val uploadId = mDatabaseRef.push().key
+                        mDatabaseRef.child(uploadId!!).setValue(upload)
+
+                        Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                }
+                .addOnProgressListener { taskSnapshot ->
+                    val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+                    mProgressBar.progress = progress.toInt()
+                }
         } ?: run {
             Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
