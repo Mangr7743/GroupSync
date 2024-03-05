@@ -1,4 +1,4 @@
-package com.example.groupsync.ui
+package com.example.groupsync.ui.auth
 
 import AuthenticationViewModel
 import android.content.Intent

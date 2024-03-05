@@ -14,12 +14,12 @@
         android:theme="@style/Theme.GroupSync"
         tools:targetApi="31" >
 
-        <activity android:name=".ui.LoginActivity">
+        <activity android:name=".ui.auth.LoginActivity">
             <!-- No intent-filter here as it's not the MAIN activity -->
         </activity>
         <activity android:name=".ui.auth.RegisterActivity" />
 
-        <activity android:name=".ui.SplashActivity"
+        <activity android:name=".ui.auth.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,10 +1,10 @@
-package com.example.groupsync.ui
+package com.example.groupsync.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.groupsync.MainActivity
-import com.example.groupsync.ui.LoginActivity
+import com.example.groupsync.ui.auth.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class SplashActivity : AppCompatActivity() {
