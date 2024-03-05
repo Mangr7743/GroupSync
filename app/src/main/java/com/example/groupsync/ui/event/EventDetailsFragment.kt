@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.groupsync.MainActivity
 import com.example.groupsync.R
 import com.example.groupsync.databinding.FragmentEventdetailsBinding
@@ -32,6 +35,16 @@ class EventDetailsFragment : Fragment() {
         val firestoreId = arguments?.getString("firestoreId")
         if (!firestoreId.isNullOrEmpty()) {
             val metadata = fetchFirestoreEventData(firestoreId)
+        }
+
+        // Set up navigation buttons for Gallery and Images
+        val bundle = Bundle()
+        bundle.putString("firestoreId", firestoreId)
+        binding.galleryButton.setOnClickListener{
+            findNavController().navigate(R.id.nav_gallery, bundle)
+        }
+        binding.imagesButton.setOnClickListener{
+            findNavController().navigate(R.id.nav_images, bundle)
         }
 
         return root

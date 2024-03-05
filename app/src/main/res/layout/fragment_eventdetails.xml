@@ -41,6 +41,18 @@
             android:text=""
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+        <Button
+            android:id="@+id/gallery_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gallery" />
+
+        <Button
+            android:id="@+id/images_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Images" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
