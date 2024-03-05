@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.groupsync.MainActivity
 import com.example.groupsync.R
 import com.example.groupsync.databinding.FragmentEventdetailsBinding
 import com.example.groupsync.ui.home.EventMetadata
@@ -53,6 +54,7 @@ class EventDetailsFragment : Fragment() {
                         document.data?.get("imageUrl").toString()
                     )
 
+                    (activity as MainActivity).supportActionBar!!.title = metadata.title;
                     binding.detailsTitle.text = metadata.title
                     binding.detailsDesc.text = metadata.subtitle
                     Picasso.get().load(metadata.image).into(binding.detailsImage)

@@ -8,3 +8,4 @@ Date | Ravinder | Zuhayr | Matthews | Rohan | Jathurshan | Japmeet | Task |
 2024-02-26 | 6 | 0 | 0 | 0 | 0 | 0 | Working on feature - download and upload image sharing |
 2024-02-26 | 4 | 4 | 0 | 0 | 0 | 0 | Pair-Programming - Adding auth and login sessions |
 2024-03-03 | 0 | 0 | 7 | 10 | 0 | 0 | Pair-Programming - Work on event creation and display |
+2024-03-04 | 4 | 4 | 0 | 0 | 0 | 0 | Pair-Programming - Finished image showcasing feature |
