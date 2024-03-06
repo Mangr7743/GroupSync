@@ -17,6 +17,7 @@
         <activity android:name=".ui.auth.LoginActivity">
             <!-- No intent-filter here as it's not the MAIN activity -->
         </activity>
+
         <activity android:name=".ui.auth.RegisterActivity" />
 
         <activity android:name=".ui.auth.SplashActivity"

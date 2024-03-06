@@ -11,6 +11,8 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_images">Images</string>
     <string name="menu_newevent">New Event</string>
+    <string name="menu_calendar">Calendar</string> <!-- New string for CalendarFragment -->
+
 
     <string name="email">Email</string>
     <string name="password">Password</string>
