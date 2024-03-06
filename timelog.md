@@ -9,3 +9,4 @@ Date | Ravinder | Zuhayr | Matthews | Rohan | Jathurshan | Japmeet | Task |
 2024-02-26 | 4 | 4 | 0 | 0 | 0 | 0 | Pair-Programming - Adding auth and login sessions |
 2024-03-03 | 0 | 0 | 7 | 10 | 0 | 0 | Pair-Programming - Work on event creation and display |
 2024-03-04 | 4 | 4 | 0 | 0 | 0 | 0 | Pair-Programming - Finished image showcasing feature |
+2024-03-05 | 0 | 5 | 0 | 0 | 0 | 0 | Singlehandedly created calendar page and updated nav bar |
