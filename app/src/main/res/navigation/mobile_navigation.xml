@@ -41,11 +41,11 @@
             android:defaultValue=""/>
     </fragment>
 
-    <!-- New fragment for the calendar page -->
-    <fragment
-        android:id="@+id/nav_calendar"
-        android:name="com.example.groupsync.ui.calendar.CalendarFragment"
-        android:label="@string/menu_calendar"
-        tools:layout="@layout/fragment_calendar" />
+<!--    &lt;!&ndash; New fragment for the calendar page &ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/nav_calendar"-->
+<!--        android:name="com.example.groupsync.ui.calendar.CalendarFragment"-->
+<!--        android:label="@string/menu_calendar"-->
+<!--        tools:layout="@layout/activity_calendar" />-->
 
 </navigation>

@@ -27,6 +27,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -34,6 +35,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -54,5 +56,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("com.github.tobiasschuerg:android-week-view:1.8.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.3.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+
+
+
+
 
 }

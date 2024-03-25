@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,6 +20,7 @@
         </activity>
 
         <activity android:name=".ui.auth.RegisterActivity" />
+        <activity android:name=".ui.calendar.CalendarActivity" />
 
         <activity android:name=".ui.auth.SplashActivity"
             android:exported="true">
