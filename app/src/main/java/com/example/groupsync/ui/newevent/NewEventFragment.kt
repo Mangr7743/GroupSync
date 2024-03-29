@@ -23,6 +23,7 @@ import com.example.groupsync.ui.gallery.Upload
 import com.example.groupsync.ui.home.HomeViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
@@ -104,6 +105,9 @@ class NewEventFragment : Fragment() {
             return
         }
 
+        // Get the current user's ID
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
         mImageUri?.let { uri ->
             val fileReference: StorageReference = mStorageRef.child(
                 System.currentTimeMillis().toString() + "." + getFileExtension(uri)
@@ -113,41 +117,37 @@ class NewEventFragment : Fragment() {
                 .addOnSuccessListener { taskSnapshot ->
                     Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
 
-                    val upload = Upload(
-                        taskSnapshot.uploadSessionUri.toString()
-                    )
-                    val uploadId = mDatabaseRef.push().key
-                    mDatabaseRef.child(uploadId!!).setValue(upload)
+                    // Get the download URL of the uploaded image
+                    fileReference.downloadUrl.addOnSuccessListener { downloadUri ->
+                        // Create an Upload object with the image URL
+                        val upload = Upload(downloadUri.toString())
+
+                        // Store the Upload object in the Firebase Realtime Database
+                        val uploadId = mDatabaseRef.push().key
+                        mDatabaseRef.child(uploadId!!).setValue(upload)
+
+                        // Store event data in Firestore with the user ID
+                        userId?.let { uid ->
+                            mFirestoreRef.document(uploadId).set(
+                                hashMapOf(
+                                    "userId" to uid,
+                                    "title" to mTitleField.text.toString(),
+                                    "description" to mDescField.text.toString(),
+                                    "imageUrl" to downloadUri.toString()
+                                )
+                            ).addOnSuccessListener {
+                                // Navigate back after successful event creation
+                                findNavController().navigateUp()
+                            }.addOnFailureListener { e ->
+                                // Handle failure to store event data in Firestore
+                                Toast.makeText(context, "Failed to create event: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                 }
-
-            val urlTask = (mUploadTask as UploadTask).continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
-                }
-                fileReference.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result
-                    mFirestoreRef.document().set(
-                        hashMapOf(
-                            "title" to mTitleField.text.toString(),
-                            "description" to mDescField.text.toString(),
-                            "imageUrl" to downloadUri.toString()
-                        )
-                    )
-//                        .addOnSuccessListener {
-//                            ViewModelProvider(this).get(HomeViewModel::class.java)
-//                                .fetchDataFromFirestore();
-//                        }
-                    findNavController().navigateUp()
-
-                }
-            }
         } ?: run {
             Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
         }

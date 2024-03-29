@@ -13,6 +13,7 @@ import com.example.groupsync.MainActivity
 import com.example.groupsync.R
 import com.example.groupsync.databinding.FragmentEventdetailsBinding
 import com.example.groupsync.ui.home.EventMetadata
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
@@ -56,21 +57,32 @@ class EventDetailsFragment : Fragment() {
     }
 
     private fun fetchFirestoreEventData(id: String) {
-        db.collection("events")
-            .document(id)
-            .get()
-            .addOnSuccessListener { document ->
-                    val metadata = EventMetadata(
-                        id,
-                        document.data?.get("title").toString(),
-                        document.data?.get("description").toString(),
-                        document.data?.get("imageUrl").toString()
-                    )
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            db.collection("events")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot.documents) {
+                        if (document.id == id) {
+                            val metadata = EventMetadata(
+                                id,
+                                document.data?.get("title").toString(),
+                                document.data?.get("description").toString(),
+                                document.data?.get("imageUrl").toString()
+                            )
 
-                    (activity as MainActivity).supportActionBar!!.title = metadata.title;
-                    binding.detailsTitle.text = metadata.title
-                    binding.detailsDesc.text = metadata.subtitle
-                    Picasso.get().load(metadata.image).into(binding.detailsImage)
-            }
+                            (activity as MainActivity).supportActionBar?.title = metadata.title
+                            binding.detailsTitle.text = metadata.title
+                            binding.detailsDesc.text = metadata.subtitle
+                            Picasso.get().load(metadata.image).into(binding.detailsImage)
+                            return@addOnSuccessListener // Exit the loop after finding the matching document
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    // Handle failure to fetch event data
+                }
+        }
     }
 }

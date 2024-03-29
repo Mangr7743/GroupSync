@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import java.net.URL
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -30,24 +31,26 @@ class HomeViewModel : ViewModel() {
     }
 
     public fun fetchDataFromFirestore() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
         db.collection("events")
+            .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { result ->
                 val eventsList: MutableList<EventMetadata> = mutableListOf()
                 for (document in result) {
                     eventsList.add(
                         EventMetadata(
-                            document.id.toString(),
+                            document.id,
                             document.data["title"].toString(),
                             document.data["description"].toString(),
                             document.data["imageUrl"].toString(),
                         )
                     )
                 }
-                _events.postValue(eventsList);
+                _events.postValue(eventsList)
             }
             .addOnFailureListener { exception ->
-                Log.d("HELP", "Error getting documents: ", exception)
+                Log.e("HELP", "Error getting documents: ", exception)
             }
     }
 }
