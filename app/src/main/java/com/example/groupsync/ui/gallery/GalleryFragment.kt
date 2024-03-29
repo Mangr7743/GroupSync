@@ -16,6 +16,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.groupsync.databinding.FragmentGalleryBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -96,36 +97,45 @@ class GalleryFragment : Fragment() {
         return mime.getExtensionFromMimeType(cresolver.getType(uri))
     }
     private fun uploadFile() {
-        mImageUri?.let { uri ->
-            val fileExtension = getFileExtension(uri)
-            val fileReference: StorageReference = mStorageRef.child("${System.currentTimeMillis()}.$fileExtension")
+        // Get the current user ID
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-            mUploadTask = fileReference.putFile(uri)
-                .addOnSuccessListener { taskSnapshot ->
-                    // Reset progress bar after a delay to show completion
-                    Handler().postDelayed({ mProgressBar.progress = 0 }, 500)
+        // Check if the user is authenticated
+        if (userId != null) {
+            mImageUri?.let { uri ->
+                val fileExtension = getFileExtension(uri)
+                val fileReference: StorageReference = mStorageRef.child("$userId/${System.currentTimeMillis()}.$fileExtension")
 
-                    // Get the download URL from the task result
-                    taskSnapshot.storage.downloadUrl.addOnSuccessListener { downloadUri ->
-                        val upload = Upload(
-                            mEditTextFileName.text.toString().trim(),
-                            downloadUri.toString() // Use the download URI here
-                        )
-                        val uploadId = mDatabaseRef.push().key
-                        mDatabaseRef.child(uploadId!!).setValue(upload)
+                mUploadTask = fileReference.putFile(uri)
+                    .addOnSuccessListener { taskSnapshot ->
+                        // Reset progress bar after a delay to show completion
+                        Handler().postDelayed({ mProgressBar.progress = 0 }, 500)
 
-                        Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
+                        // Get the download URL from the task result
+                        taskSnapshot.storage.downloadUrl.addOnSuccessListener { downloadUri ->
+                            val upload = Upload(
+                                mEditTextFileName.text.toString().trim(),
+                                downloadUri.toString() // Use the download URI here
+                            )
+                            val uploadId = mDatabaseRef.child(userId).push().key
+                            mDatabaseRef.child(userId).child(uploadId!!).setValue(upload)
+
+                            Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-                }
-                .addOnProgressListener { taskSnapshot ->
-                    val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
-                    mProgressBar.progress = progress.toInt()
-                }
-        } ?: run {
-            Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnProgressListener { taskSnapshot ->
+                        val progress = (100.0 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount)
+                        mProgressBar.progress = progress.toInt()
+                    }
+            } ?: run {
+                Toast.makeText(context, "No file selected", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            // User is not authenticated, handle accordingly
+            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -28,4 +28,9 @@ class AuthenticationViewModel : ViewModel() {
             }
         }
     }
+
+    fun logoutUser() {
+        authRepository.logoutUser()
+        _userLiveData.value = null
+    }
 }

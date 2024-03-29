@@ -10,6 +10,10 @@ class AuthenticationRepository {
     fun createUser(email: String, password: String) =
         firebaseAuth.createUserWithEmailAndPassword(email, password)
 
+    fun logoutUser() {
+        firebaseAuth.signOut()
+    }
+
     val currentUser: FirebaseUser?
         get() = firebaseAuth.currentUser
 }

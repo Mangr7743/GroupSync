@@ -15,11 +15,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.groupsync.databinding.ActivityMainBinding
 import com.example.groupsync.ui.newevent.NewEventFragment
+import AuthenticationViewModel
+import android.content.Intent
+import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
+import com.example.groupsync.ui.auth.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: AuthenticationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +65,20 @@ private lateinit var binding: ActivityMainBinding
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        viewModel = ViewModelProvider(this)[AuthenticationViewModel::class.java]
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                // Handle action_settings menu item click
+                // You can implement the sign-out logic here
+                viewModel.logoutUser()
+                startActivity(Intent(this, LoginActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
