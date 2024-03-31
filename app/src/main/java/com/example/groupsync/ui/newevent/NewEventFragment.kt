@@ -122,13 +122,14 @@ class NewEventFragment : Fragment() {
                         // Create an Upload object with the image URL
                         val upload = Upload(downloadUri.toString())
 
-                        // Store the Upload object in the Firebase Realtime Database
-                        val uploadId = mDatabaseRef.push().key
-                        mDatabaseRef.child(uploadId!!).setValue(upload)
+                        // Note: commented out because we dont want the cover image in the rtdb
+//                        // Store the Upload object in the Firebase Realtime Database
+//                        val uploadId = mDatabaseRef.push().key
+//                        mDatabaseRef.child(uploadId!!).setValue(upload)
 
                         // Store event data in Firestore with the user ID
                         userId?.let { uid ->
-                            mFirestoreRef.document(uploadId).set(
+                            mFirestoreRef.document().set(
                                 hashMapOf(
                                     "userId" to uid,
                                     "title" to mTitleField.text.toString(),

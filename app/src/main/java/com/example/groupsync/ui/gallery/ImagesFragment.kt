@@ -26,12 +26,17 @@ class ImagesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Retrieve the event document id from arguments. See
+        // EventDetailsFragment.kt::onCreateView() for more details.
+        val firestoreId = arguments?.getString("firestoreId")
+
         // Get the current user ID
         val userId = FirebaseAuth.getInstance().currentUser?.uid
-
         userId?.let { uid ->
-            // Adjust the database reference to point to the current user's uploads
-            databaseRef = FirebaseDatabase.getInstance().getReference("uploads").child(uid)
+            // Get a database reference to the images under the current event (firestoreId)
+            databaseRef = FirebaseDatabase.getInstance().getReference("uploads").child(firestoreId!!)
+
 
             binding.recyclerView.layoutManager = LinearLayoutManager(context)
             binding.recyclerView.setHasFixedSize(true)
@@ -49,7 +54,8 @@ class ImagesFragment : Fragment() {
                         imageAdapter = ImageAdapter(requireContext(), uploads)
                         binding.recyclerView.adapter = imageAdapter
                     }
-                    binding.progressCircle.setVisibility(View.INVISIBLE);
+                    // TODO: This causes a null pointer exception...
+//                    binding.progressCircle.setVisibility(View.INVISIBLE);
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
