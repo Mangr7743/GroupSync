@@ -1,25 +1,34 @@
 package com.example.groupsync
+
+import AuthenticationViewModel
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.InputType
 import android.view.Menu
-import android.view.View
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import android.view.MenuItem
+import android.widget.EditText
+import android.app.AlertDialog
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.example.groupsync.databinding.ActivityMainBinding
-import com.example.groupsync.ui.newevent.NewEventFragment
-import AuthenticationViewModel
-import android.content.Intent
-import android.view.MenuItem
-import androidx.lifecycle.ViewModelProvider
 import com.example.groupsync.ui.auth.LoginActivity
+import com.example.groupsync.ui.home.EventMetadata
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,11 +36,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: AuthenticationViewModel
 
+    private lateinit var mFirestoreRef: CollectionReference
+    private var mFirebaseUserId: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-     binding = ActivityMainBinding.inflate(layoutInflater)
-     setContentView(binding.root)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        mFirestoreRef = FirebaseFirestore.getInstance().collection("events")
+        mFirebaseUserId = FirebaseAuth.getInstance().currentUser?.uid
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -40,10 +55,12 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.nav_home, // Existing top-level destination
-            R.id.nav_calendar
-        ), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_home, // Existing top-level destination
+                R.id.nav_calendar
+            ), drawerLayout
+        )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -77,6 +94,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 true
             }
+            R.id.action_join_event -> {
+                openJoinDialog()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -84,5 +105,48 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun openJoinDialog() {
+        val builder: AlertDialog.Builder = android.app.AlertDialog.Builder(this)
+        builder.setTitle("Join Event")
+
+        val input = EditText(this)
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT)
+        builder.setView(input)
+
+        builder.setPositiveButton("Join",
+            DialogInterface.OnClickListener { dialog, which ->
+                val code = input.getText().toString()
+
+                // add user id to event
+                mFirebaseUserId?.let { uid ->
+                    FirebaseFirestore.getInstance().collection("events")
+                        .whereEqualTo("inviteCode", code)
+                        .get()
+                        .addOnSuccessListener { result ->
+                            val document = result.documents[0] // should only be one
+
+                            var usersList = document.get("users") as MutableList<String>
+
+
+                            if (usersList.contains(uid)) {
+                                Toast.makeText(this, "You already joined this event!", Toast.LENGTH_SHORT).show()
+                                return@addOnSuccessListener
+                            }
+                            usersList.add(uid)
+
+                            document.reference.update("users", usersList)
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("HELP", "Error getting documents: ", exception)
+                        }
+                }
+            })
+        builder.setNegativeButton("Cancel",
+            DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
+
+        builder.show()
     }
 }

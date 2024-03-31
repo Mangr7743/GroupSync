@@ -33,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import kotlin.random.Random
 
 class NewEventFragment : Fragment() {
     private var _binding: FragmentNeweventBinding? = null
@@ -126,6 +127,12 @@ class NewEventFragment : Fragment() {
                         val uploadId = mDatabaseRef.push().key
                         mDatabaseRef.child(uploadId!!).setValue(upload)
 
+                        val charPool : List<Char> = ('A'..'Z') + ('0'..'9')
+
+                        val inviteCode = (1..6)
+                            .map { Random.nextInt(0, charPool.size).let { charPool[it] } }
+                            .joinToString("")
+
                         // Store event data in Firestore with the user ID
                         userId?.let { uid ->
                             mFirestoreRef.document(uploadId).set(
@@ -133,7 +140,9 @@ class NewEventFragment : Fragment() {
                                     "userId" to uid,
                                     "title" to mTitleField.text.toString(),
                                     "description" to mDescField.text.toString(),
-                                    "imageUrl" to downloadUri.toString()
+                                    "imageUrl" to downloadUri.toString(),
+                                    "inviteCode" to inviteCode,
+                                    "users" to listOf(uid)
                                 )
                             ).addOnSuccessListener {
                                 // Navigate back after successful event creation
