@@ -11,6 +11,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import android.webkit.WebView
+import android.webkit.WebViewClient
 
 
 class CalendarFragment : Fragment() {
@@ -23,20 +25,25 @@ class CalendarFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        var webView: WebView = binding!!.webView
+        webView.webViewClient = WebViewClient()
+        webView.settings.javaScriptEnabled = true
+        webView.loadUrl("https://calendar.google.com")
+
         return binding!!.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar")
-        binding!!.calendarView.setOnDateChangeListener { calendarView, i, i1, i2 ->
-            stringDateSelected =
-                Integer.toString(i) + Integer.toString(i1 + 1) + Integer.toString(
-                    i2
-                )
-            calendarClicked()
-        }
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar")
+//        binding!!.webView.setOnDateChangeListener { webView, i, i1, i2 ->
+//            stringDateSelected =
+//                Integer.toString(i) + Integer.toString(i1 + 1) + Integer.toString(
+//                    i2
+//                )
+//            calendarClicked()
+//        }
+//    }
 
     private fun calendarClicked() {
         databaseReference!!.child(stringDateSelected!!)
