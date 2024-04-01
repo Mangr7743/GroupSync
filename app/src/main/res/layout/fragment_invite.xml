@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center|center_horizontal|center_vertical"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:outlineProvider="bounds"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/inviteCode"
+        style="@style/TextAppearance.Material3.HeadlineMedium"
+        android:layout_width="172dp"
+        android:layout_height="87dp"
+        android:gravity="center_vertical"
+        android:letterSpacing="0.1"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textStyle="normal|bold" />
+
+    <Space
+        android:layout_width="8dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/copyButton"
+        android:layout_width="60dp"
+        android:layout_height="72dp"
+        android:textAlignment="viewStart"
+        app:icon="?attr/actionModeCopyDrawable"
+        app:iconGravity="textStart"
+        app:iconSize="32dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+    <Space
+        android:layout_width="8dp"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/shareButton"
+        android:layout_width="60dp"
+        android:layout_height="72dp"
+        android:textAlignment="viewStart"
+        app:icon="?attr/actionModeShareDrawable"
+        app:iconGravity="start|textStart"
+        app:iconPadding="8dp"
+        app:iconSize="32dp"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Medium" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+</LinearLayout>

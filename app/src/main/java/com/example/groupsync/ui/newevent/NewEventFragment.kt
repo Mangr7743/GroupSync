@@ -35,6 +35,7 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
+import kotlin.random.Random
 
 class NewEventFragment : Fragment() {
     private var _binding: FragmentNeweventBinding? = null
@@ -124,15 +125,18 @@ class NewEventFragment : Fragment() {
                         // Create an Upload object with the image URL
                         val upload = Upload(downloadUri.toString())
 
-                        // Store event data in firestore and add the current user to it.
-                        // events
-                        // |_   <event_id> (randomly generated)
-                        //      |_  users: uid[]
-                        //      |_  ...
-                        // users
-                        // |_   <uid>
-                        //      |_  events: event_id[]
-                        //      |_  ...
+
+                        // Store the Upload object in the Firebase Realtime Database
+                        val uploadId = mDatabaseRef.push().key
+                        mDatabaseRef.child(uploadId!!).setValue(upload)
+
+                        val charPool : List<Char> = ('A'..'Z') + ('0'..'9')
+
+                        val inviteCode = (1..6)
+                            .map { Random.nextInt(0, charPool.size).let { charPool[it] } }
+                            .joinToString("")
+
+
                         userId?.let { uid ->
                             mFirestoreRef.add(
                                 hashMapOf(
@@ -140,7 +144,9 @@ class NewEventFragment : Fragment() {
                                     "users" to listOf(uid),
                                     "title" to mTitleField.text.toString(),
                                     "description" to mDescField.text.toString(),
-                                    "imageUrl" to downloadUri.toString()
+                                    "imageUrl" to downloadUri.toString(),
+                                    "inviteCode" to inviteCode,
+                                    "users" to listOf(uid)
                                 )
                             ).addOnSuccessListener { docRef ->
                                 // We've created the event, now we should add this to the user's

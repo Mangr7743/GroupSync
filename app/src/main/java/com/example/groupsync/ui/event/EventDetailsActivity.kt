@@ -1,39 +1,33 @@
 package com.example.groupsync.ui.event
 
-import android.os.Bundle
-import android.transition.TransitionInflater
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
-import com.example.groupsync.MainActivity
 import com.example.groupsync.R
-import com.example.groupsync.databinding.FragmentEventdetailsBinding
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
+import com.example.groupsync.databinding.ActivityEventdetailsBinding
+import com.example.groupsync.ui.gallery.GalleryActivity
+import com.example.groupsync.ui.gallery.ImagesActivity
 import com.example.groupsync.ui.home.EventMetadata
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
-class EventDetailsFragment : Fragment() {
-    private var _binding: FragmentEventdetailsBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+
+class EventDetailsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityEventdetailsBinding
 
     private val db = FirebaseFirestore.getInstance()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         // Inflate the layout for this fragment
-        _binding = FragmentEventdetailsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        binding = ActivityEventdetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val firestoreId = arguments?.getString("firestoreId")
+        val firestoreId = intent.getStringExtra("firestoreId")
         if (!firestoreId.isNullOrEmpty()) {
             val metadata = fetchFirestoreEventData(firestoreId)
         }
@@ -41,19 +35,29 @@ class EventDetailsFragment : Fragment() {
         // Set up navigation buttons for Gallery and Images
         val bundle = Bundle()
         bundle.putString("firestoreId", firestoreId)
+
+        val mFrag = InviteFragment()
+        mFrag.arguments = bundle
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.invite_container, mFrag)
+        fragmentTransaction.commit()
+
         binding.galleryButton.setOnClickListener{
-            findNavController().navigate(R.id.nav_gallery, bundle)
+            val intent: Intent = Intent(
+                this,
+                GalleryActivity::class.java
+            )
+            intent.putExtra("args", bundle)
+            startActivity(intent)
         }
         binding.imagesButton.setOnClickListener{
-            findNavController().navigate(R.id.nav_images, bundle)
+            val intent: Intent = Intent(
+                this,
+                ImagesActivity::class.java
+            )
+            intent.putExtra("args", bundle)
+            startActivity(intent)
         }
-
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun fetchFirestoreEventData(id: String) {
@@ -72,7 +76,7 @@ class EventDetailsFragment : Fragment() {
                                 document.data?.get("imageUrl").toString()
                             )
 
-                            (activity as MainActivity).supportActionBar?.title = metadata.title
+                            supportActionBar?.title = metadata.title
                             binding.detailsTitle.text = metadata.title
                             binding.detailsDesc.text = metadata.subtitle
                             Picasso.get().load(metadata.image).into(binding.detailsImage)

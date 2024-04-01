@@ -1,14 +1,15 @@
 package com.example.groupsync.ui.home
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.groupsync.R
+import com.example.groupsync.ui.event.EventDetailsActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.imageview.ShapeableImageView
 import com.squareup.picasso.Picasso
@@ -28,11 +29,10 @@ class EventsAdapter(private val mContext: Context, private val mEvents: List<Eve
         // Convert image url to bitmap
         Picasso.get().load(eventCurrent.image).into(holder.coverImageView)
 
-        val bundle = Bundle()
-        bundle.putString("firestoreId", eventCurrent.id)
-
         holder.containerView.setOnClickListener {
-            findNavController(holder.itemView).navigate(R.id.nav_eventdetails, bundle)
+            val intent = Intent(mContext, EventDetailsActivity::class.java)
+            intent.putExtra("firestoreId", eventCurrent.id)
+            mContext.startActivity(intent)
         }
     }
 
