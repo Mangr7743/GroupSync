@@ -27,9 +27,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
@@ -123,6 +125,7 @@ class NewEventFragment : Fragment() {
                         // Create an Upload object with the image URL
                         val upload = Upload(downloadUri.toString())
 
+
                         // Store the Upload object in the Firebase Realtime Database
                         val uploadId = mDatabaseRef.push().key
                         mDatabaseRef.child(uploadId!!).setValue(upload)
@@ -133,25 +136,47 @@ class NewEventFragment : Fragment() {
                             .map { Random.nextInt(0, charPool.size).let { charPool[it] } }
                             .joinToString("")
 
-                        // Store event data in Firestore with the user ID
+
                         userId?.let { uid ->
-                            mFirestoreRef.document(uploadId).set(
+                            mFirestoreRef.add(
                                 hashMapOf(
-                                    "userId" to uid,
+                                    "creatorUserId" to uid,
+                                    "users" to listOf(uid),
                                     "title" to mTitleField.text.toString(),
                                     "description" to mDescField.text.toString(),
                                     "imageUrl" to downloadUri.toString(),
                                     "inviteCode" to inviteCode,
                                     "users" to listOf(uid)
                                 )
-                            ).addOnSuccessListener {
-                                // Navigate back after successful event creation
-                                findNavController().navigateUp()
+                            ).addOnSuccessListener { docRef ->
+                                // We've created the event, now we should add this to the user's
+                                // events.
+                                val usersRef = FirebaseFirestore.getInstance().collection("users")
+                                    .document(uid);
+                                usersRef.set(hashMapOf("events" to FieldValue.arrayUnion(docRef.id)), SetOptions.merge())
+                                    .addOnSuccessListener {
+                                        // Navigate back after successful event creation
+                                        findNavController().navigateUp()
+                                    }
+                                    .addOnFailureListener { e ->
+                                        // Handle failure to store event data in Firestore
+                                        Toast.makeText(
+                                            context,
+                                            "Failed to create event: ${e.message}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                             }.addOnFailureListener { e ->
                                 // Handle failure to store event data in Firestore
-                                Toast.makeText(context, "Failed to create event: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Failed to create event: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
+
+
                     }
                 }
                 .addOnFailureListener { e ->
