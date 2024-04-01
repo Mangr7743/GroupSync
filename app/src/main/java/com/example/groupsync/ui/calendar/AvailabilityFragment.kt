@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -51,11 +52,11 @@ class AvailabilityFragment : Fragment() {
                 .set(mapOf("availability" to availabilityMap))
                 .addOnSuccessListener {
                     // Successfully updated Firestore
-                    // Optional: Show success message
+                    Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
                 }
                 .addOnFailureListener { e ->
                     // Handle errors
-                    // Optional: Show error message
+                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                 }
         }
     }
