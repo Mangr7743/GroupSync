@@ -31,9 +31,11 @@ class HomeViewModel : ViewModel() {
     }
 
     public fun fetchDataFromFirestore() {
+        // Retrieve events that we are a part of.
         val userId = FirebaseAuth.getInstance().currentUser?.uid
+
         db.collection("events")
-            .whereEqualTo("userId", userId)
+            .whereArrayContains("users", userId!!)  // only get events this user is in
             .get()
             .addOnSuccessListener { result ->
                 val eventsList: MutableList<EventMetadata> = mutableListOf()

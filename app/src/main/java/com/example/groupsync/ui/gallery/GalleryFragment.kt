@@ -97,13 +97,22 @@ class GalleryFragment : Fragment() {
         return mime.getExtensionFromMimeType(cresolver.getType(uri))
     }
     private fun uploadFile() {
-        // Get the current user ID
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        // Retrieve the event document id from arguments. See
+        // EventDetailsFragment.kt::onCreateView() for more details.
+        val firestoreId = arguments?.getString("firestoreId")
 
-        // Check if the user is authenticated
+        // Ensure the user is authenticated to upload an image.
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
+
             mImageUri?.let { uri ->
                 val fileExtension = getFileExtension(uri)
+                // Storage looks like:
+                //  uploads
+                //  |_  <userId>
+                //      |_ <timestamp>.png
+                // We store images by user who uploaded, but references to them in the db will
+                // be by event id.
                 val fileReference: StorageReference = mStorageRef.child("$userId/${System.currentTimeMillis()}.$fileExtension")
 
                 mUploadTask = fileReference.putFile(uri)
@@ -111,14 +120,21 @@ class GalleryFragment : Fragment() {
                         // Reset progress bar after a delay to show completion
                         Handler().postDelayed({ mProgressBar.progress = 0 }, 500)
 
-                        // Get the download URL from the task result
+                        // Update the Realtime Database to get a reference to this image.
                         taskSnapshot.storage.downloadUrl.addOnSuccessListener { downloadUri ->
+                            // Realtime Database for images looks like:
+                            //  uploads
+                            //  |_  <firebaseId> (this represents an event)
+                            //      |_  <uploadId> (uniquely generated per image)
+                            //          |_ name: ...
+                            //          |_ imageUrl: ...
+
                             val upload = Upload(
                                 mEditTextFileName.text.toString().trim(),
-                                downloadUri.toString() // Use the download URI here
+                                downloadUri.toString()
                             )
-                            val uploadId = mDatabaseRef.child(userId).push().key
-                            mDatabaseRef.child(userId).child(uploadId!!).setValue(upload)
+                            val uploadId = mDatabaseRef.child(firestoreId!!).push().key
+                            mDatabaseRef.child(firestoreId).child(uploadId!!).setValue(upload)
 
                             Toast.makeText(context, "Upload Successful", Toast.LENGTH_LONG).show()
                         }
