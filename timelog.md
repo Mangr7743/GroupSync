@@ -11,4 +11,5 @@ Date | Ravinder | Zuhayr | Matthews | Rohan | Jathurshan | Japmeet | Task |
 2024-03-04 | 4 | 4 | 0 | 0 | 0 | 0 | Pair-Programming - Finished image showcasing feature |
 2024-03-05 | 0 | 5 | 0 | 0 | 0 | 0 | Singlehandedly created calendar page and updated nav bar |
 2024-03-25 | 2.5 | 2.5 | 0 | 0 | 0 | 0 | Refactoring and making calendar editable by hourly view |
-2024-03-25 | 2 | 0 | 0 | 0 | 0 | 0 | Update images and event in database, add sign-out, research map integration (no easy way rn, holding off on it) |
+2024-03-29 | 2 | 0 | 0 | 0 | 0 | 0 | Update images and event in database, add sign-out, research map integration (no easy way rn, holding off on it) |
+2024-04-1 | 3.5 | 3.5 | 0 | 0 | 0 | 0 | Work on adding availability input feature and calendar feature and reviewing pr |
