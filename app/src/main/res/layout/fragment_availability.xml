@@ -21,6 +21,15 @@
                 android:text="Monday"
                 android:paddingEnd="16dp"/>
 
+            <!-- Horizontal scroll view begins here -->
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/cb_monday_6pm"
                 android:layout_width="wrap_content"
@@ -56,6 +65,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <!-- Repeat for Tuesday to Sunday with appropriate IDs -->
@@ -71,7 +82,15 @@
                 android:layout_height="wrap_content"
                 android:text="Tuesday"
                 android:paddingEnd="16dp"/>
+            <!-- Horizontal scroll view begins here -->
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/cb_tuesday_6pm"
                 android:layout_width="wrap_content"
@@ -108,7 +127,8 @@
                 android:layout_height="wrap_content"
                 android:text="12 PM" />
             <!-- Repeat CheckBoxes for 7 PM to 12 AM -->
-
+            </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <!-- Wednesday -->
@@ -123,6 +143,14 @@
                 android:layout_height="wrap_content"
                 android:text="Wednesday"
                 android:paddingEnd="16dp"/>
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             <CheckBox
                 android:id="@+id/cb_wednesday_6pm"
@@ -161,7 +189,8 @@
                 android:layout_height="wrap_content"
                 android:text="12 PM" />
             <!-- Repeat CheckBoxes for 7 PM to 12 AM -->
-
+            </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -175,6 +204,14 @@
                 android:layout_height="wrap_content"
                 android:text="Thursday"
                 android:paddingEnd="16dp"/>
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             <CheckBox
                 android:id="@+id/cb_thursday_6pm"
@@ -213,7 +250,8 @@
                 android:layout_height="wrap_content"
                 android:text="12 PM" />
             <!-- Repeat CheckBoxes for 7 PM to 12 AM -->
-
+            </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -227,7 +265,14 @@
                 android:layout_height="wrap_content"
                 android:text="Friday"
                 android:paddingEnd="16dp"/>
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/cb_friday_6pm"
                 android:layout_width="wrap_content"
@@ -265,7 +310,8 @@
                 android:layout_height="wrap_content"
                 android:text="12 PM" />
             <!-- Repeat CheckBoxes for 7 PM to 12 AM -->
-
+            </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -279,7 +325,14 @@
                 android:layout_height="wrap_content"
                 android:text="Saturday"
                 android:paddingEnd="16dp"/>
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/cb_saturday_6pm"
                 android:layout_width="wrap_content"
@@ -317,7 +370,8 @@
                 android:layout_height="wrap_content"
                 android:text="12 PM" />
             <!-- Repeat CheckBoxes for 7 PM to 12 AM -->
-
+            </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -331,7 +385,14 @@
                 android:layout_height="wrap_content"
                 android:text="Sunday"
                 android:paddingEnd="16dp"/>
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/cb_sunday_6pm"
                 android:layout_width="wrap_content"
@@ -369,7 +430,8 @@
                 android:layout_height="wrap_content"
                 android:text="12 PM" />
             <!-- Repeat CheckBoxes for 7 PM to 12 AM -->
-
+            </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <!-- Button to submit availability -->
