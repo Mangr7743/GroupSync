@@ -122,13 +122,6 @@ class NewEventFragment : Fragment() {
 
                     // Get the download URL of the uploaded image
                     fileReference.downloadUrl.addOnSuccessListener { downloadUri ->
-                        // Create an Upload object with the image URL
-                        val upload = Upload(downloadUri.toString())
-
-
-                        // Store the Upload object in the Firebase Realtime Database
-                        val uploadId = mDatabaseRef.push().key
-                        mDatabaseRef.child(uploadId!!).setValue(upload)
 
                         val charPool : List<Char> = ('A'..'Z') + ('0'..'9')
 

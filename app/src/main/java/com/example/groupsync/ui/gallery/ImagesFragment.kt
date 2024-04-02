@@ -1,6 +1,7 @@
 package com.example.groupsync.ui.gallery
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,42 +32,46 @@ class ImagesFragment : Fragment() {
         // EventDetailsFragment.kt::onCreateView() for more details.
         val firestoreId = arguments?.getString("firestoreId")
 
-        // Get the current user ID
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        userId?.let { uid ->
-            // Get a database reference to the images under the current event (firestoreId)
-            databaseRef = FirebaseDatabase.getInstance().getReference("uploads").child(firestoreId!!)
+        if (!firestoreId.isNullOrEmpty()) {
+
+            // Get the current user ID
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            userId?.let { uid ->
+                // Get a database reference to the images under the current event (firestoreId)
+                databaseRef =
+                    FirebaseDatabase.getInstance().getReference("uploads").child(firestoreId)
 
 
-            binding.recyclerView.layoutManager = LinearLayoutManager(context)
-            binding.recyclerView.setHasFixedSize(true)
-            imageAdapter = ImageAdapter(requireContext(), mutableListOf())
-            binding.recyclerView.adapter = imageAdapter
+                binding.recyclerView.layoutManager = LinearLayoutManager(context)
+                binding.recyclerView.setHasFixedSize(true)
+                imageAdapter = ImageAdapter(requireContext(), mutableListOf())
+                binding.recyclerView.adapter = imageAdapter
 
-            databaseRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    uploads.clear()
-                    for (postSnapshot in snapshot.children) {
-                        val upload = postSnapshot.getValue(Upload::class.java)
-                        upload?.let { uploads.add(it) }
+                databaseRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        uploads.clear()
+                        for (postSnapshot in snapshot.children) {
+                            val upload = postSnapshot.getValue(Upload::class.java)
+                            upload?.let { uploads.add(it) }
+                        }
+                        if (isAdded) {
+                            imageAdapter = ImageAdapter(requireContext(), uploads)
+                            binding.recyclerView.adapter = imageAdapter
+                        }
+                        binding.progressCircle.setVisibility(View.INVISIBLE);
                     }
-                    if (isAdded) {
-                        imageAdapter = ImageAdapter(requireContext(), uploads)
-                        binding.recyclerView.adapter = imageAdapter
-                    }
-                    // TODO: This causes a null pointer exception...
-//                    binding.progressCircle.setVisibility(View.INVISIBLE);
-                }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Handle possible errors.
-                    Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    binding.progressCircle.setVisibility(View.INVISIBLE);
-                }
-            })
-        } ?: run {
-            // User is not authenticated, handle accordingly
-            Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle possible errors.
+                        Toast.makeText(context, databaseError.getMessage(), Toast.LENGTH_SHORT)
+                            .show();
+                        binding.progressCircle.setVisibility(View.INVISIBLE);
+                    }
+                })
+            } ?: run {
+                // User is not authenticated, handle accordingly
+                Toast.makeText(context, "User not authenticated", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
