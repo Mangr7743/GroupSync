@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class InviteFragment : Fragment() {
     private var _binding: FragmentInviteBinding? = null
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -51,21 +52,16 @@ class InviteFragment : Fragment() {
     private fun fetchFirestoreEventData(id: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
-            db.collection("events")
-                .whereEqualTo("userId", userId)
+            db.collection("events").document(id)
                 .get()
-                .addOnSuccessListener { querySnapshot ->
-                    for (document in querySnapshot.documents) {
-                        if (document.id == id) {
-                            val metadata = EventMetadata(
-                                id = id,
-                                inviteCode = document.data?.get("inviteCode").toString()
-                            )
+                .addOnSuccessListener { document ->
+                    val metadata = EventMetadata(
+                        id = id,
+                        inviteCode = document.data?.get("inviteCode").toString()
+                    )
 
-                            binding.inviteCode.text = metadata.inviteCode
-                            return@addOnSuccessListener // Exit the loop after finding the matching document
-                        }
-                    }
+                    binding.inviteCode.text = metadata.inviteCode
+                    return@addOnSuccessListener // Exit the loop after finding the matching document
                 }
                 .addOnFailureListener { e ->
                     // Handle failure to fetch event data
@@ -76,7 +72,8 @@ class InviteFragment : Fragment() {
     private fun onCodeCopied() {
         val code = binding.inviteCode.text
 
-        val clipboard = getSystemService(requireContext(), ClipboardManager::class.java) as ClipboardManager
+        val clipboard =
+            getSystemService(requireContext(), ClipboardManager::class.java) as ClipboardManager
         val clip = ClipData.newPlainText("Invite Code", code)
         clipboard.setPrimaryClip(clip)
     }

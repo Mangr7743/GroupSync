@@ -4,6 +4,7 @@ import com.example.groupsync.R
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
@@ -30,63 +31,68 @@ class EventDetailsActivity : AppCompatActivity() {
         val firestoreId = intent.getStringExtra("firestoreId")
         if (!firestoreId.isNullOrEmpty()) {
             val metadata = fetchFirestoreEventData(firestoreId)
-        }
 
-        // Set up navigation buttons for Gallery and Images
-        val bundle = Bundle()
-        bundle.putString("firestoreId", firestoreId)
+            // Set up navigation buttons for Gallery and Images
+            val bundle = Bundle()
+            bundle.putString("firestoreId", firestoreId)
 
-        val mFrag = InviteFragment()
-        mFrag.arguments = bundle
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.invite_container, mFrag)
-        fragmentTransaction.commit()
+            val mFrag = InviteFragment()
+            mFrag.arguments = bundle
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.add(R.id.invite_container, mFrag)
+            fragmentTransaction.commit()
 
-        binding.galleryButton.setOnClickListener{
-            val intent: Intent = Intent(
-                this,
-                GalleryActivity::class.java
-            )
-            intent.putExtra("args", bundle)
-            startActivity(intent)
-        }
-        binding.imagesButton.setOnClickListener{
-            val intent: Intent = Intent(
-                this,
-                ImagesActivity::class.java
-            )
-            intent.putExtra("args", bundle)
-            startActivity(intent)
+            binding.galleryButton.setOnClickListener {
+                val intent: Intent = Intent(
+                    this,
+                    GalleryActivity::class.java
+                )
+                intent.putExtra("firestoreId", firestoreId)
+                startActivity(intent)
+            }
+            binding.imagesButton.setOnClickListener {
+                val intent: Intent = Intent(
+                    this,
+                    ImagesActivity::class.java
+                )
+                intent.putExtra("firestoreId", firestoreId)
+                startActivity(intent)
+            }
         }
     }
 
     private fun fetchFirestoreEventData(id: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
-            db.collection("events")
-                .whereEqualTo("userId", userId)
+            db.collection("events").document(id)
                 .get()
-                .addOnSuccessListener { querySnapshot ->
-                    for (document in querySnapshot.documents) {
-                        if (document.id == id) {
-                            val metadata = EventMetadata(
-                                id,
-                                document.data?.get("title").toString(),
-                                document.data?.get("description").toString(),
-                                document.data?.get("imageUrl").toString()
-                            )
+                .addOnSuccessListener { document ->
+                    val metadata = EventMetadata(
+                        id,
+                        document.data?.get("title").toString(),
+                        document.data?.get("description").toString(),
+                        document.data?.get("imageUrl").toString()
+                    )
 
-                            supportActionBar?.title = metadata.title
-                            binding.detailsTitle.text = metadata.title
-                            binding.detailsDesc.text = metadata.subtitle
-                            Picasso.get().load(metadata.image).into(binding.detailsImage)
-                            return@addOnSuccessListener // Exit the loop after finding the matching document
-                        }
-                    }
+                    supportActionBar?.title = metadata.title
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    binding.detailsTitle.text = metadata.title
+                    binding.detailsDesc.text = metadata.subtitle
+                    Picasso.get().load(metadata.image).into(binding.detailsImage)
+                    return@addOnSuccessListener // Exit the loop after finding the matching document
                 }
                 .addOnFailureListener { e ->
                     // Handle failure to fetch event data
                 }
+        }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed() // Navigate back when Up button is pressed
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
