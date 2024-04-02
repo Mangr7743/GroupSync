@@ -29,7 +29,7 @@
         android:name="com.example.groupsync.ui.newevent.NewEventFragment"
         android:label="@string/menu_newevent"
         tools:layout="@layout/fragment_newevent" />
-
+    
     <!-- New fragment for the calendar page -->
     <fragment
         android:id="@+id/nav_calendar"

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -30,8 +31,12 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textinput_title"
             android:layout_width="match_parent"
+            android:background="@drawable/round_bg_edittext"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="7dp"
             android:layout_height="wrap_content"
             android:hint="Title"
+            android:textSize="20dp"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
 
@@ -46,12 +51,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_bg_edittext"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="7dp"
+            android:textSize="20dp"
+
             android:inputType="text|textMultiLine"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_upload_cover_image"
             android:layout_width="match_parent"
+            android:background="@drawable/round_bg_edittext"
+            android:backgroundTint="@color/colorMain"
+            app:backgroundTint="@null"
+            android:layout_marginTop="10dp"
             android:layout_height="61dp"
             android:text="Upload Cover Image"
             app:icon="@drawable/ic_menu_gallery"
@@ -74,6 +89,9 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text=" Create Event"
+            android:background="@drawable/round_bg_edittext"
+            android:backgroundTint="@color/colorMain"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
