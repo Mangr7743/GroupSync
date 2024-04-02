@@ -68,65 +68,66 @@ class EventDetailsActivity : AppCompatActivity() {
 
     private fun getBestTime(id: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId != null) {
-            db.collection("events").document(id)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        if (document.contains("users")) {
-                            val users = document.get("users") as List<String>
-                            var avMaps = mutableListOf<Map<String,Boolean>>()
-                            var completedQueries = 0
+        if (userId == null) {
+            return;
+        }
+        db.collection("events").document(id)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    if (document.contains("users")) {
+                        val users = document.get("users") as List<String>
+                        var avMaps = mutableListOf<Map<String,Boolean>>()
+                        var completedQueries = 0
 
-                            for (user in users) {
-                                var currUser = db.collection("users").document(user)
+                        for (user in users) {
+                            var currUser = db.collection("users").document(user)
 
-                                currUser.get()
-                                    .addOnSuccessListener { userDocument ->
-                                        if (userDocument.exists()) {
-                                            var currAvailability = userDocument.get("availability") as Map<String, Boolean>
-                                            avMaps.add(currAvailability)
-                                        }
-                                        completedQueries++  // Increment counter
-                                        // Run algo
-                                        if (completedQueries == users.size) {
-                                            // All queries completed, proceed with the algorithm
-                                            val timeSlot = findFirstFreeSpace(avMaps)
-                                            if (timeSlot != "N/A") {
+                            currUser.get()
+                                .addOnSuccessListener { userDocument ->
+                                    if (userDocument.exists()) {
+                                        var currAvailability = userDocument.get("availability") as Map<String, Boolean>
+                                        avMaps.add(currAvailability)
+                                    }
+                                    completedQueries++  // Increment counter
+                                    // Run algo
+                                    if (completedQueries == users.size) {
+                                        // All queries completed, proceed with the algorithm
+                                        val timeSlot = findFirstFreeSpace(avMaps)
+                                        if (timeSlot != "N/A") {
 
-                                               db.collection("events").document(id)
-                                                   .update(
-                                                       hashMapOf(
-                                                           "time" to timeSlot
-                                                       ) as Map<String, Any>
-                                                   ).addOnSuccessListener {
-                                                       binding.timeTitle.text = timeSlot
-                                                       Toast.makeText(this, "Event Time Found", Toast.LENGTH_LONG).show()
-                                                   }
-                                                   .addOnFailureListener {
-                                                       Toast.makeText(this, "Could not update database", Toast.LENGTH_LONG).show()
-                                                   }
-                                            } else {
-                                                Toast.makeText(this, "No Time Found", Toast.LENGTH_LONG).show()
-                                            }
+                                           db.collection("events").document(id)
+                                               .update(
+                                                   hashMapOf(
+                                                       "time" to timeSlot
+                                                   ) as Map<String, Any>
+                                               ).addOnSuccessListener {
+                                                   binding.timeTitle.text = timeSlot
+                                                   Toast.makeText(this, "Event Time Found", Toast.LENGTH_LONG).show()
+                                               }
+                                               .addOnFailureListener {
+                                                   Toast.makeText(this, "Could not update database", Toast.LENGTH_LONG).show()
+                                               }
+                                        } else {
+                                            Toast.makeText(this, "No Time Found", Toast.LENGTH_LONG).show()
                                         }
                                     }
-                                    .addOnFailureListener { e ->
-                                        Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
-                                    }
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                                }
 
-
-                            }
 
                         }
-                    }
 
+                    }
                 }
-                .addOnFailureListener { e ->
-                    // Handle failure to fetch event data
-                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
-                }
-        }
+
+            }
+            .addOnFailureListener { e ->
+                // Handle failure to fetch event data
+                Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun findFirstFreeSpace(userMaps: MutableList<Map<String, Boolean>>): String {
