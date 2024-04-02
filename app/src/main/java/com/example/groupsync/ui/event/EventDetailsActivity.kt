@@ -2,11 +2,13 @@ package com.example.groupsync.ui.event
 
 import com.example.groupsync.R
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.example.groupsync.databinding.ActivityEventdetailsBinding
@@ -168,6 +170,7 @@ class EventDetailsActivity : AppCompatActivity() {
                     )
 
                     supportActionBar?.title = metadata.title
+                    supportActionBar?.setBackgroundDrawable(ColorDrawable(ResourcesCompat.getColor(resources , R.color.colorMain , null)));
                     supportActionBar?.setDisplayHomeAsUpEnabled(true)
                     binding.detailsTitle.text = metadata.title
                     binding.detailsDesc.text = metadata.subtitle

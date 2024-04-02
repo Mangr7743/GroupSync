@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_choose_image"
         android:layout_width="wrap_content"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/colorMain"
         android:paddingHorizontal="10dp"
         android:textColor="@color/white"
         android:background="@drawable/round_bg_edittext"
@@ -47,6 +47,10 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_upload"
+        android:background="@drawable/round_bg_edittext"
+        android:backgroundTint="@color/colorMain"
+        android:textColor="@color/white"
+        android:paddingHorizontal="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
