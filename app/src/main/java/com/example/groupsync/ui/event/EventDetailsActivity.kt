@@ -4,6 +4,7 @@ import com.example.groupsync.R
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
@@ -74,6 +75,7 @@ class EventDetailsActivity : AppCompatActivity() {
                     )
 
                     supportActionBar?.title = metadata.title
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
                     binding.detailsTitle.text = metadata.title
                     binding.detailsDesc.text = metadata.subtitle
                     Picasso.get().load(metadata.image).into(binding.detailsImage)
@@ -82,6 +84,15 @@ class EventDetailsActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     // Handle failure to fetch event data
                 }
+        }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed() // Navigate back when Up button is pressed
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }
