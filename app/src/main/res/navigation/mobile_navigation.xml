@@ -39,6 +39,13 @@
 
     <!-- New fragment for the calendar page -->
     <fragment
+        android:id="@+id/nav_availability"
+        android:name="com.example.groupsync.ui.calendar.AvailabilityFragment"
+        android:label="Availability"
+        tools:layout="@layout/fragment_availability" />
+
+    <!-- New fragment for the calendar page -->
+    <fragment
         android:id="@+id/nav_calendar"
         android:name="com.example.groupsync.ui.calendar.CalendarFragment"
         android:label="@string/menu_calendar"
@@ -47,5 +54,6 @@
         android:id="@+id/eventDetailsActivity3"
         android:name="com.example.groupsync.ui.event.EventDetailsActivity"
         android:label="EventDetailsActivity" />
+
 
 </navigation>
