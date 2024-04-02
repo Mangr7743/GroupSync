@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, // Existing top-level destination
-                R.id.nav_calendar
+                R.id.nav_calendar,
+                R.id.nav_availability
             ), drawerLayout
         )
 
