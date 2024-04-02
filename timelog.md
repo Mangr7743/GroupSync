@@ -17,3 +17,4 @@ Date | Ravinder | Zuhayr | Matthews | Rohan | Jathurshan | Japmeet | Task |
 2024-03-31 | 0 | 0 | 0 | 2 | 0 | 0 | Implement joining events by event code feature. |
 2024-04-1 | 3.5 | 3.5 | 0 | 0 | 0 | 0 | Work on adding availability input feature and calendar feature and reviewing pr |
 2024-04-1 | 0 | 0 | 3 | 3 | 0 | 0 | Fix image display bugs, polish code, and add navigation between activities. |
+2024-04-2 | 3 | 0 | 0 | 0 | 0 | 0 | Fixed bugs, Added availability algorithm, and modified events |
