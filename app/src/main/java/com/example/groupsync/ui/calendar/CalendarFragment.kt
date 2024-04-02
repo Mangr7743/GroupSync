@@ -33,18 +33,6 @@ class CalendarFragment : Fragment() {
         return binding!!.root
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        databaseReference = FirebaseDatabase.getInstance().getReference("Calendar")
-//        binding!!.webView.setOnDateChangeListener { webView, i, i1, i2 ->
-//            stringDateSelected =
-//                Integer.toString(i) + Integer.toString(i1 + 1) + Integer.toString(
-//                    i2
-//                )
-//            calendarClicked()
-//        }
-//    }
-
     private fun calendarClicked() {
         databaseReference!!.child(stringDateSelected!!)
             .addListenerForSingleValueEvent(object : ValueEventListener {
