@@ -7,18 +7,12 @@
         <!-- Existing Home item -->
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_home"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_availability"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@android:drawable/ic_menu_today"
             android:title="Availability" />
-
-        <!-- New Calendar item -->
-        <item
-            android:id="@+id/nav_calendar"
-            android:icon="@drawable/ic_menu_camera"
-        android:title="@string/menu_calendar" />
 
     </group>
 </menu>
