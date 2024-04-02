@@ -12,4 +12,8 @@ Date | Ravinder | Zuhayr | Matthews | Rohan | Jathurshan | Japmeet | Task |
 2024-03-05 | 0 | 5 | 0 | 0 | 0 | 0 | Singlehandedly created calendar page and updated nav bar |
 2024-03-25 | 2.5 | 2.5 | 0 | 0 | 0 | 0 | Refactoring and making calendar editable by hourly view |
 2024-03-29 | 2 | 0 | 0 | 0 | 0 | 0 | Update images and event in database, add sign-out, research map integration (no easy way rn, holding off on it) |
+2024-03-30 | 0 | 0 | 3 | 1 | 0 | 0 | Reorganize database schema. Add user lists to events, tie images to events. |
+2024-03-30 | 0 | 0 | 1 | 3 | 0 | 0 | Create invite codes. |
+2024-03-31 | 0 | 0 | 0 | 2 | 0 | 0 | Implement joining events by event code feature. |
 2024-04-1 | 3.5 | 3.5 | 0 | 0 | 0 | 0 | Work on adding availability input feature and calendar feature and reviewing pr |
+2024-04-1 | 0 | 0 | 3 | 3 | 0 | 0 | Fix image display bugs, polish code, and add navigation between activities. |
