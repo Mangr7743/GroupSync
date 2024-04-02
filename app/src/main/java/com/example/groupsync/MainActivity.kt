@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             usersList.add(uid)
 
-                            document.reference.update("users", usersList)
+                            document.reference.update("users", usersList).addOnSuccessListener { recreate() }
                         }
                         .addOnFailureListener { exception ->
                             Log.e("HELP", "Error getting documents: ", exception)
