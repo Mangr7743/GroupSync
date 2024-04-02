@@ -139,6 +139,7 @@ class NewEventFragment : Fragment() {
                                     "description" to mDescField.text.toString(),
                                     "imageUrl" to downloadUri.toString(),
                                     "inviteCode" to inviteCode,
+                                    "time" to "N/A",
                                     "users" to listOf(uid)
                                 )
                             ).addOnSuccessListener { docRef ->
