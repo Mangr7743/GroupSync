@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:text="11 PM" />
             <CheckBox
-                android:id="@+id/cb_tuesday_12pm"
+                android:id="@+id/cb_tuesday_12am"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
@@ -184,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:text="11 PM" />
             <CheckBox
-                android:id="@+id/cb_wednesday_12pm"
+                android:id="@+id/cb_wednesday_12am"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
@@ -245,7 +245,7 @@
                 android:layout_height="wrap_content"
                 android:text="11 PM" />
             <CheckBox
-                android:id="@+id/cb_thursday_12pm"
+                android:id="@+id/cb_thursday_12am"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
@@ -305,7 +305,7 @@
                 android:layout_height="wrap_content"
                 android:text="11 PM" />
             <CheckBox
-                android:id="@+id/cb_friday_12pm"
+                android:id="@+id/cb_friday_12am"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
@@ -365,7 +365,7 @@
                 android:layout_height="wrap_content"
                 android:text="11 PM" />
             <CheckBox
-                android:id="@+id/cb_saturday_12pm"
+                android:id="@+id/cb_saturday_12am"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
@@ -425,7 +425,7 @@
                 android:layout_height="wrap_content"
                 android:text="11 PM" />
             <CheckBox
-                android:id="@+id/cb_sunday_12pm"
+                android:id="@+id/cb_sunday_12am"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12 AM" />
