@@ -140,6 +140,7 @@ class NewEventFragment : Fragment() {
                                     "imageUrl" to downloadUri.toString(),
                                     "inviteCode" to inviteCode,
                                     "time" to "N/A",
+                                    "carpoolLink" to "",
                                     "users" to listOf(uid)
                                 )
                             ).addOnSuccessListener { docRef ->

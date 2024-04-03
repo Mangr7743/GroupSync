@@ -1,27 +1,35 @@
 package com.example.groupsync.ui.event
 
+import android.Manifest
 import com.example.groupsync.R
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import com.example.groupsync.databinding.ActivityEventdetailsBinding
 import com.example.groupsync.ui.gallery.GalleryActivity
 import com.example.groupsync.ui.gallery.ImagesActivity
+import com.example.groupsync.ui.map.MapActivity
 import com.example.groupsync.ui.home.EventMetadata
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 
 class EventDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEventdetailsBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -30,6 +38,9 @@ class EventDetailsActivity : AppCompatActivity() {
         // Inflate the layout for this fragment
         binding = ActivityEventdetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Prompt Location Services
+        getLastLocation()
 
         val firestoreId = intent.getStringExtra("firestoreId")
         if (!firestoreId.isNullOrEmpty()) {
@@ -57,6 +68,14 @@ class EventDetailsActivity : AppCompatActivity() {
                 val intent: Intent = Intent(
                     this,
                     ImagesActivity::class.java
+                )
+                intent.putExtra("firestoreId", firestoreId)
+                startActivity(intent)
+            }
+            binding.mapsButton.setOnClickListener {
+                val intent: Intent = Intent(
+                    this,
+                    MapActivity::class.java
                 )
                 intent.putExtra("firestoreId", firestoreId)
                 startActivity(intent)
@@ -154,6 +173,59 @@ class EventDetailsActivity : AppCompatActivity() {
         // No free timeslots found
         return "N/A"
     }
+
+    private fun getLastLocation() {
+        // Check if location permissions are granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Request the missing permissions
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+            return
+        }
+
+        // Permissions are granted, proceed to get the location
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            // In some rare situations, this can be null.
+            if (location != null) {
+                val latitude = location.latitude
+                val longitude = location.longitude
+                // Use the latitude and longitude as needed
+                updateUserLocationInFirebase(latitude, longitude)
+            } else {
+                // Handle the case where location is null
+                // You might want to request a new location update here
+            }
+        }
+    }
+
+    private fun updateUserLocationInFirebase(latitude: Double, longitude: Double) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid  // Make sure the user is authenticated
+
+        if (userId != null) {
+            val userLocation = mapOf(
+                "latitude" to latitude,
+                "longitude" to longitude
+            )
+
+
+            db.collection("users").document(userId)
+                .update(userLocation)
+                .addOnSuccessListener {
+                    // Successfully updated Firestore
+                    Toast.makeText(this, "Location Provided", Toast.LENGTH_LONG).show()
+                }
+                .addOnFailureListener { e ->
+                    // Handle errors
+                    Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+
 
     private fun fetchFirestoreEventData(id: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
