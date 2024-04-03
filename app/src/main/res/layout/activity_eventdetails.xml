@@ -54,7 +54,7 @@
             android:backgroundTint="@color/colorMain"
             android:textColor="@color/white"
             android:layout_height="wrap_content"
-            android:text="Gallery" />
+            android:text="Upload Image" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/images_button"
@@ -65,7 +65,7 @@
             android:backgroundTint="@color/colorMain"
             android:textColor="@color/white"
             android:layout_height="wrap_content"
-            android:text="Images" />
+            android:text="View Gallery" />
 
         <FrameLayout
             android:id="@+id/invite_container"
