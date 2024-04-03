@@ -10,18 +10,20 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.GroupSync"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="31" >
 
 
-        <activity android:name=".ui.auth.LoginActivity">
+        <activity android:name=".ui.auth.LoginActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">>
             <!-- No intent-filter here as it's not the MAIN activity -->
         </activity>
 
-        <activity android:name=".ui.auth.RegisterActivity" />
+        <activity android:name=".ui.auth.RegisterActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
         <activity android:name=".ui.auth.SplashActivity"
             android:exported="true">
