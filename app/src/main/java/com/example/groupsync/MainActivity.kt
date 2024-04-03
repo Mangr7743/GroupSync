@@ -1,30 +1,34 @@
 package com.example.groupsync
 
 import AuthenticationViewModel
+import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.EditText
-import android.app.AlertDialog
-import android.util.Log
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.groupsync.databinding.ActivityMainBinding
 import com.example.groupsync.ui.auth.LoginActivity
-import com.example.groupsync.ui.home.EventMetadata
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -85,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         viewModel = ViewModelProvider(this)[AuthenticationViewModel::class.java]
         return when (item.itemId) {
@@ -108,14 +113,25 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun openJoinDialog() {
-        val builder: AlertDialog.Builder = android.app.AlertDialog.Builder(this)
+        val builder: AlertDialog.Builder = android.app.AlertDialog.Builder(this,R.style.MyDialogStyle)
+
         builder.setTitle("Join Event")
 
         val input = EditText(this)
-
         input.setInputType(InputType.TYPE_CLASS_TEXT)
+        input.background = ResourcesCompat.getDrawable(resources , R.drawable.round_bg_edittext , null)
         builder.setView(input)
+        input.setTextColor(ResourcesCompat.getColor(resources , R.color.black , null))
+        input.height = 125
+        input.textCursorDrawable = null
+        Handler(Looper.getMainLooper()).postDelayed({
+            val layoutParams = (input.layoutParams as? ViewGroup.MarginLayoutParams)
+            layoutParams?.setMargins(40, 40, 40, 40)
+            input.layoutParams = layoutParams
+            input.setPadding(20,0,20,0)
+        },200)
 
         builder.setPositiveButton("Join",
             DialogInterface.OnClickListener { dialog, which ->
